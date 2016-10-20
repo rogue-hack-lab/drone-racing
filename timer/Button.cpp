@@ -41,9 +41,25 @@
 */
 Button::Button(uint8_t buttonPin, uint8_t buttonMode){
 	pin=buttonPin;
-  pinMode(pin,INPUT);
-  
-	buttonMode==BUTTON_PULLDOWN ? pulldown() : pullup(buttonMode);
+
+		if (buttonMode == BUTTON_PULLDOWN_INTERNAL) {
+		  pinMode(pin,INPUT_PULLDOWN);
+		} else {
+		  pinMode(pin,INPUT);
+		}
+
+
+		switch (buttonMode){
+			case BUTTON_PULLDOWN:
+				pulldown();
+				break;
+			case BUTTON_PULLDOWN_INTERNAL:
+				pulldown();
+				break;
+			default:
+				pullup(buttonMode);
+				break;
+		}
   state = 0;
   bitWrite(state,CURRENT,!mode);
   
