@@ -20,32 +20,31 @@
 #define LANE_2_BTN D2
 #define LANE_3_BTN D3
 
+Button btnS = Button(START_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button btn1 = Button(LANE_1_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button btn2 = Button(LANE_2_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button btn3 = Button(LANE_3_PIN, BUTTON_PULLDOWN_INTERNAL);
 
 void setup() {
-    
-    pinMode(START_BTN, INPUT_PULLDOWN);
-    pinMode(LANE_1_BTN, INPUT_PULLDOWN);
-    pinMode(LANE_2_BTN, INPUT_PULLDOWN);
-    pinMode(LANE_3_BTN, INPUT_PULLDOWN);
-    
-    
-    
+
 }
 
 void loop() {
-    
-    if (digitalRead(START_BTN) == HIGH){
-        Particle.publish("btn","0");
+    //Particle.publish("test",(String)(INPUT));
+
+    if (btnS.uniquePress()){
+        Particle.publish("btnS","isPressed");
     }
-    if (digitalRead(LANE_1_BTN) == HIGH){
-        Particle.publish("btn","1");
+    if (btn1.uniquePress()){
+        Particle.publish("btn1","isPressed");
     }
-    if (digitalRead(LANE_2_BTN) == HIGH){
-        Particle.publish("btn","2");
+    if (btn2.uniquePress()){
+        Particle.publish("btn2","isPressed");
     }
-    if (digitalRead(LANE_3_BTN) == HIGH){
-        Particle.publish("btn","3");
+    if (btn3.uniquePress()){
+        Particle.publish("btn3","isPressed");
     }
+
     delay(50);
-    
+
 }
