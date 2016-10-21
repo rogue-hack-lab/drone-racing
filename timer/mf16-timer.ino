@@ -9,6 +9,7 @@
 * Libraries:
 *   Arduino HAL button Lib  http://playground.arduino.cc/Code/Button (adapted)
 *   Adafruit NeoPixel       https://github.com/adafruit/Adafruit_NeoPixel
+*   Adafruit LCDBackpack (bkobkobko remix)  https://github.com/bkobkobko/SparkCoreLibraries/tree/master/Adafruit
 * Authors:
 *   Kevin Conner            kevin.r.conner@gmail.com
 */
