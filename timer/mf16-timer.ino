@@ -16,18 +16,21 @@
 
 #include "Button.h"
 
-#define START_BTN_PIN D0
-#define LANE_1_BTN_PIN D1
-#define LANE_2_BTN_PIN D2
-#define LANE_3_BTN_PIN D3
 
 #define LCD_PIN D4
+#define LANES 3
 
+#define START_BTN_PIN D2
+#define LANE_1_BTN_PIN D3
+#define LANE_2_BTN_PIN D4
+#define LANE_3_BTN_PIN D5
+Button startBtn = Button(START_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button laneBtn[LANES] = {
+  Button(LANE_1_BTN_PIN, BUTTON_PULLDOWN_INTERNAL),
+  Button(LANE_2_BTN_PIN, BUTTON_PULLDOWN_INTERNAL),
+  Button(LANE_3_BTN_PIN, BUTTON_PULLDOWN_INTERNAL)
+};
 
-Button btnS = Button(START_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
-Button btn1 = Button(LANE_1_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
-Button btn2 = Button(LANE_2_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
-Button btn3 = Button(LANE_3_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
 
 void setup() {
 
@@ -35,17 +38,14 @@ void setup() {
 
 void loop() {
 
-    if (btnS.uniquePress()){
-        Particle.publish("btnS","isPressed");
+    if (startBtn.uniquePress()){
+        Particle.publish("StartButton","Start");
     }
-    if (btn1.uniquePress()){
-        Particle.publish("btn1","isPressed");
-    }
-    if (btn2.uniquePress()){
-        Particle.publish("btn2","isPressed");
-    }
-    if (btn3.uniquePress()){
-        Particle.publish("btn3","isPressed");
+
+    for (int i; i < LANES; i++){
+      if (laneBtn[i].uniquePress()){
+          Particle.publish("LaneButton",(String)(i));
+      }
     }
 
     delay(50);
