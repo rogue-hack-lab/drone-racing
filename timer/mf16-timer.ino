@@ -9,28 +9,30 @@
 * Libraries:
 *   Arduino HAL button Lib  http://playground.arduino.cc/Code/Button (adapted)
 *   Adafruit NeoPixel       https://github.com/adafruit/Adafruit_NeoPixel
-* Authors: 
+* Authors:
 *   Kevin Conner            kevin.r.conner@gmail.com
 */
 
 #include "Button.h"
 
-#define START_BTN D0
-#define LANE_1_BTN D1
-#define LANE_2_BTN D2
-#define LANE_3_BTN D3
+#define START_BTN_PIN D0
+#define LANE_1_BTN_PIN D1
+#define LANE_2_BTN_PIN D2
+#define LANE_3_BTN_PIN D3
 
-Button btnS = Button(START_PIN, BUTTON_PULLDOWN_INTERNAL);
-Button btn1 = Button(LANE_1_PIN, BUTTON_PULLDOWN_INTERNAL);
-Button btn2 = Button(LANE_2_PIN, BUTTON_PULLDOWN_INTERNAL);
-Button btn3 = Button(LANE_3_PIN, BUTTON_PULLDOWN_INTERNAL);
+#define LCD_PIN D4
+
+
+Button btnS = Button(START_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button btn1 = Button(LANE_1_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button btn2 = Button(LANE_2_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
+Button btn3 = Button(LANE_3_BTN_PIN, BUTTON_PULLDOWN_INTERNAL);
 
 void setup() {
 
 }
 
 void loop() {
-    //Particle.publish("test",(String)(INPUT));
 
     if (btnS.uniquePress()){
         Particle.publish("btnS","isPressed");
