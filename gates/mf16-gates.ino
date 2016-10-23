@@ -8,7 +8,7 @@
 *   Adafruit NeoPixel       https://www.adafruit.com/products/1461
 * Libraries:
 *   Adafruit NeoPixel       https://github.com/adafruit/Adafruit_NeoPixel
-* Authors: 
+* Authors:
 *   Code adapted from SparkCore NeoPixel example library https://github.com/technobly/SparkCore-NeoPixel
 *   Kevin Conner            kevin.r.conner@gmail.com
 */
@@ -21,7 +21,7 @@
  */
 
 #include "application.h"
-#include "neopixel/neopixel.h"
+#include "neopixel.h"
 
 SYSTEM_MODE(AUTOMATIC);
 
@@ -55,9 +55,9 @@ int gamma[] = {
   215,218,220,223,225,228,231,233,236,239,241,244,247,249,252,255 };
 
 
-//   __    ___   _     ___   ___   __  
-//  / /`  / / \ | |   / / \ | |_) ( (` 
-//  \_\_, \_\_/ |_|__ \_\_/ |_| \ _)_) 
+//   __    ___   _     ___   ___   __
+//  / /`  / / \ | |   / / \ | |_) ( (`
+//  \_\_, \_\_/ |_|__ \_\_/ |_| \ _)_)
 
 uint32_t black = strip.Color(0,0,0);
 uint32_t white = strip.Color(255,255,255);
@@ -80,9 +80,9 @@ uint8_t getBlue(uint32_t color){
     return color & 0xff;
 }
 
-//   __   ____ _____  _     ___        _        _     ___   ___   ___  
-//  ( (` | |_   | |  | | | | |_)     _|_)      | |   / / \ / / \ | |_) 
-//  _)_) |_|__  |_|  \_\_/ |_|       (|__7     |_|__ \_\_/ \_\_/ |_|   
+//   __   ____ _____  _     ___        _        _     ___   ___   ___
+//  ( (` | |_   | |  | | | | |_)     _|_)      | |   / / \ / / \ | |_)
+//  _)_) |_|__  |_|  \_\_/ |_|       (|__7     |_|__ \_\_/ \_\_/ |_|
 void setup() {
     strip.begin();
     strip.show();
@@ -94,34 +94,34 @@ void setup() {
 
 
 void loop() {
-    
-    
+
+
     //allOn(red);
-    // rainbow(1000,10000);
-    
-    // wipe(orange, 20, up);
-    // wipe(black, 20, up);
-    
-    // wipe(green, 20, down);
-    // wipe(black, 20, down);
-    
-    // wipe(red, 20, in);
-    // wipe(black, 20, in);
-    
-    // wipe(blue, 20, out);
-    // wipe(black, 20, out);
-    
+    rainbow(1000,10000);
+
+    wipe(orange, 20, up);
+    wipe(black, 20, up);
+
+    wipe(green, 20, down);
+    wipe(black, 20, down);
+
+    wipe(red, 20, in);
+    wipe(black, 20, in);
+
+    wipe(blue, 20, out);
+    wipe(black, 20, out);
+
     fadeIn(cyan, 4);
     fadeOut(cyan, 8);
-    
-    // allOn(magenta);
-    // delay(250);
-    // flash(yellow, 50, 750);
-    // flash(white, 100, 750);
-    // flash(yellow, 10, 750);
-    // wipe(black, 20, out);
-    // delay(2000);
-    
+
+    allOn(magenta);
+    delay(250);
+    flash(yellow, 50, 750);
+    flash(white, 100, 750);
+    flash(yellow, 10, 750);
+    wipe(black, 20, out);
+    delay(2000);
+
 }
 
 
@@ -147,11 +147,11 @@ void gateChanger(const char *event, const char *data){
             flash(yellow, 50, 2000);
             allOn(black);
             break;
-    }    
+    }
 }
-//   ___    __    __    ____      __   ____  ___    _     ____  _      __    ____  __  
-//  | |_)  / /\  / /`  | |_      ( (` | |_  / / \  | | | | |_  | |\ | / /`  | |_  ( (` 
-//  |_| \ /_/--\ \_\_, |_|__     _)_) |_|__ \_\_\\ \_\_/ |_|__ |_| \| \_\_, |_|__ _)_) 
+//   ___    __    __    ____      __   ____  ___    _     ____  _      __    ____  __
+//  | |_)  / /\  / /`  | |_      ( (` | |_  / / \  | | | | |_  | |\ | / /`  | |_  ( (`
+//  |_| \ /_/--\ \_\_, |_|__     _)_) |_|__ \_\_\\ \_\_/ |_|__ |_| \| \_\_, |_|__ _)_)
 
 void readySetGo(){
     fadeOut(red,3);
@@ -163,20 +163,20 @@ void readySetGo(){
 }
 
 void winner(uint8_t lane){
-    
+
 }
 
 void race(){
-    
+
 }
 
 void oneMinuteRemaining(){
-    
+
 }
 
-//    __    _      _   _       __   _____  _   ___   _      __  
-//   / /\  | |\ | | | | |\/|  / /\   | |  | | / / \ | |\ | ( (` 
-//  /_/--\ |_| \| |_| |_|  | /_/--\  |_|  |_| \_\_/ |_| \| _)_) 
+//    __    _      _   _       __   _____  _   ___   _      __
+//   / /\  | |\ | | | | |\/|  / /\   | |  | | / / \ | |\ | ( (`
+//  /_/--\ |_| \| |_| |_|  | /_/--\  |_|  |_| \_\_/ |_| \| _)_)
 
 void rainbow(uint8_t wait, unsigned long duration) {
     uint16_t i, j;
@@ -247,7 +247,7 @@ void wipeIn(uint32_t color, uint8_t wait) {
         strip.show();
         delay(wait);
     }
-    
+
 }
 void wipeOut(uint32_t color, uint8_t wait) {
     uint8_t middle = strip.numPixels()/2;
@@ -273,7 +273,7 @@ void fadeIn(uint32_t color, uint8_t wait) {
         }
         delay(wait);
         strip.show();
-    } 
+    }
 }
 void fadeOut(uint32_t color, uint8_t wait) {
     uint8_t r = getRed(color);
@@ -301,7 +301,7 @@ void allOn(uint32_t color){
 
 void flash(uint32_t color, uint8_t cycle, unsigned long duration) {
     unsigned long endTime = millis()+duration;
-    
+
     while (millis() < endTime){
         allOn(color);
         delay(cycle);
@@ -327,7 +327,7 @@ void flash(uint32_t color, uint8_t cycle, unsigned long duration) {
 
 
 void whiteOverRainbow(uint8_t wait, uint8_t whiteSpeed, uint8_t whiteLength) {
-  
+
   if(whiteLength >= strip.numPixels()) whiteLength = strip.numPixels() - 1;
 
   int head = whiteLength - 1;
@@ -348,7 +348,7 @@ void whiteOverRainbow(uint8_t wait, uint8_t whiteSpeed, uint8_t whiteLength) {
         else{
           strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
         }
-        
+
       }
 
       if(millis() - lastTime > whiteSpeed) {
@@ -361,14 +361,14 @@ void whiteOverRainbow(uint8_t wait, uint8_t whiteSpeed, uint8_t whiteLength) {
       }
 
       if(loopNum == loops) return;
-    
+
       head%=strip.numPixels();
       tail%=strip.numPixels();
         strip.show();
         delay(wait);
     }
   }
-  
+
 }
 
 
@@ -396,11 +396,10 @@ void rainbowCycle(uint8_t wait) {
 //             if (i % scrollWidth == 0) {
 //                 strip.setPixelColor(i, color);
 //             } else {
-                
-//             }
-            
-//         }    
-//     }
-    
-// }
 
+//             }
+
+//         }
+//     }
+
+// }
