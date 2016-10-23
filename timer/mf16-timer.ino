@@ -44,7 +44,7 @@ void setup() {
   lcd[2].begin(0x72);
 
   for (int i; i < LANES; i++){
-    lcd[i].println(0);
+    lcd[i].println(i + 1);
     lcd[i].writeDisplay();
   }
 }
@@ -54,11 +54,7 @@ void loop() {
 
     if (startBtn.uniquePress()){
         Particle.publish("StartButton","Start");
-        for (int i; i < LANES; i++){
-          counter[i] = 0;
-          lcd[i].println(counter[i]);
-          lcd[i].writeDisplay();
-        }
+        resetLanes();
     }
 
     for (int i; i < LANES; i++){
@@ -74,6 +70,13 @@ void loop() {
 
 }
 
+void resetLanes(){
+  for (int i; i < LANES; i++){
+    counter[i] = 0;
+    lcd[i].println(counter[i]);
+    lcd[i].writeDisplay();
+  }
+}
 
 void segmentTest(Adafruit_7segment matrix) {
   // try to print a number thats too long
