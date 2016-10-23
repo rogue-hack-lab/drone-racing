@@ -50,36 +50,65 @@ void setup() {
 }
 
 uint16_t counter[LANES];
+bool laneActive[LANES];
+uint32_t startTime = 0;
+
 void loop() {
 
-    if (startBtn.uniquePress()){
-        Particle.publish("StartButton","Start");
-        resetLanes();
-    }
+    doStartButton();
 
-    for (int i; i < LANES; i++){
-      if (laneBtn[i].uniquePress()){
-          Particle.publish("LaneButton",(String)(i));
-          counter[i]++;
-          lcd[i].println(counter[i]);
-          lcd[i].writeDisplay();
-      }
-    }
+    doLaneButtons();
 
     delay(10);
 
 }
 
-void resetLanes(){
+void doStartButton() {
+  if (startBtn.uniquePress()){
+      Particle.publish("StartButton","Start");
+      startTime = millis();
+      startRace();
+  }
+}
+
+void doLaneButtons() {
+  for (int i; i < LANES; i++){
+    if (laneActive[i]) {
+      counter[i] = formatTime(millis() - startTime);
+      lcd[i].println(counter[i]);
+      lcd[i].writeDisplay();
+      if (laneBtn[i].uniquePress()){
+          Particle.publish("LaneStop",(String)(i));
+          laneActive[i] = !laneActive[i];
+      }
+    }
+  }
+}
+
+//reset lane counters to zero
+void startRace(){
   for (int i; i < LANES; i++){
     counter[i] = 0;
+    laneActive[i] = true;
     lcd[i].println(counter[i]);
     lcd[i].writeDisplay();
   }
 }
 
+uint16_t formatTime(uint16_t milliseconds){
+  uint16_t minutes = (int) (((milliseconds / (1000 * 60)) % 10) * 1000);
+  uint16_t seconds = (int) ((milliseconds / 1000) * 10);
+  uint16_t tenths  = (int) ((milliseconds / 100) % 10);
+  return minutes + seconds + tenths;
+}
+
+
+
+
+
+// for reference and testing
 void segmentTest(Adafruit_7segment matrix) {
-  // try to print a number thats too long
+  /*// try to print a number thats too long
   matrix.print(10000, DEC);
   matrix.writeDisplay();
   delay(500);
@@ -99,7 +128,7 @@ void segmentTest(Adafruit_7segment matrix) {
     matrix.println(counter);
     matrix.writeDisplay();
     delay(10);
-  }
+  }*/
 
   // method #2 - draw each digit
   uint16_t blinkcounter = 0;
