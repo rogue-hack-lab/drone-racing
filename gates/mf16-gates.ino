@@ -59,16 +59,20 @@ int gamma[] = {
 //  / /`  / / \ | |   / / \ | |_) ( (`
 //  \_\_, \_\_/ |_|__ \_\_/ |_| \ _)_)
 
-uint32_t black = strip.Color(0,0,0);
-uint32_t white = strip.Color(255,255,255);
+uint32_t black = Adafruit_NeoPixel::Color(0,0,0);
+uint32_t white = Adafruit_NeoPixel::Color(255,255,255);
 
-uint32_t red = strip.Color(255,0,0);
-uint32_t orange = strip.Color(255,150,0);
-uint32_t yellow = strip.Color(255,255,0);
-uint32_t green = strip.Color(0,255,0);
-uint32_t blue = strip.Color(0,0,255);
-uint32_t cyan = strip.Color(0,255,255);
-uint32_t magenta = strip.Color(255,0,255);
+uint32_t red = Adafruit_NeoPixel::Color(255,0,0);
+uint32_t orange = Adafruit_NeoPixel::Color(255,150,0);
+uint32_t yellow = Adafruit_NeoPixel::Color(255,255,0);
+uint32_t green = Adafruit_NeoPixel::Color(0,255,0);
+uint32_t blue = Adafruit_NeoPixel::Color(0,0,255);
+uint32_t cyan = Adafruit_NeoPixel::Color(0,255,255);
+uint32_t magenta = Adafruit_NeoPixel::Color(255,0,255);
+
+uint32_t lane1Color = green;
+uint32_t lane2Color = white;
+uint32_t lane3Color = blue;
 
 uint8_t getRed(uint32_t color){
     return (color >> 16) & 0xff;
@@ -86,7 +90,8 @@ uint8_t getBlue(uint32_t color){
 void setup() {
     strip.begin();
     strip.show();
-    //Particle.subscribe("changeGate",gateChanger);
+    Particle.subscribe("StartButton",readySetGo);
+    Particle.subscribe("LaneStop",lanePressed);
 }
 
 
@@ -97,21 +102,21 @@ void loop() {
 
 
     //allOn(red);
-    rainbow(1000,10000);
+    //rainbow(1000,10000);
 
-    wipe(orange, 20, up);
+    /*wipe(orange, 20, up);
     wipe(black, 20, up);
 
     wipe(green, 20, down);
-    wipe(black, 20, down);
+    wipe(black, 20, down);*/
 
-    wipe(red, 20, in);
-    wipe(black, 20, in);
+    wipe(white, 20, in);
+    //wipe(black, 20, in);
 
     wipe(blue, 20, out);
-    wipe(black, 20, out);
+    //wipe(black, 20, out);
 
-    fadeIn(cyan, 4);
+    /*fadeIn(cyan, 4);
     fadeOut(cyan, 8);
 
     allOn(magenta);
@@ -120,40 +125,15 @@ void loop() {
     flash(white, 100, 750);
     flash(yellow, 10, 750);
     wipe(black, 20, out);
-    delay(2000);
+    delay(2000);*/
 
 }
 
-
-void gateChanger(const char *event, const char *data){
-    switch(data[0]){
-        case '0':
-            wipe(orange, 20, up);
-            wipe(black, 20, up);
-            break;
-        case '1':
-            wipe(green, 20, down);
-            wipe(black, 20, down);
-            break;
-        case '2':
-            wipe(red, 20, in);
-            wipe(black, 20, in);
-            break;
-        case '3':
-            wipe(blue, 20, out);
-            wipe(black, 20, out);
-            break;
-        default:
-            flash(yellow, 50, 2000);
-            allOn(black);
-            break;
-    }
-}
 //   ___    __    __    ____      __   ____  ___    _     ____  _      __    ____  __
 //  | |_)  / /\  / /`  | |_      ( (` | |_  / / \  | | | | |_  | |\ | / /`  | |_  ( (`
 //  |_| \ /_/--\ \_\_, |_|__     _)_) |_|__ \_\_\\ \_\_/ |_|__ |_| \| \_\_, |_|__ _)_)
 
-void readySetGo(){
+void readySetGo(const char *event, const char *data){
     fadeOut(red,3);
     fadeOut(red,3);
     fadeOut(yellow,3);
@@ -162,8 +142,8 @@ void readySetGo(){
     delay(1000);
 }
 
-void winner(uint8_t lane){
-
+void lanePressed(const char *event, const char *data){
+    flash(yellow, 50, 500);
 }
 
 void race(){
@@ -195,13 +175,13 @@ void rainbow(uint8_t wait, unsigned long duration) {
 // The colours are a transition r - g - b - back to r.
 uint32_t Wheel(byte WheelPos) {
     if(WheelPos < 85) {
-        return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+        return Adafruit_NeoPixel::Color(WheelPos * 3, 255 - WheelPos * 3, 0);
     } else if(WheelPos < 170) {
         WheelPos -= 85;
-        return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+        return Adafruit_NeoPixel::Color(255 - WheelPos * 3, 0, WheelPos * 3);
     } else {
         WheelPos -= 170;
-        return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+        return Adafruit_NeoPixel::Color(0, WheelPos * 3, 255 - WheelPos * 3);
     }
 }
 
@@ -269,7 +249,7 @@ void fadeIn(uint32_t color, uint8_t wait) {
     uint8_t b = getBlue(color);
     for(int j = 0; j < 256 ; j++){
       for(uint16_t i=0; i<strip.numPixels(); i++) {
-          strip.setPixelColor(i, strip.Color(map(j,0,255,0,r),map(j,0,255,0,g),map(j,0,255,0,b)));
+          strip.setPixelColor(i, Adafruit_NeoPixel::Color(map(j,0,255,0,r),map(j,0,255,0,g),map(j,0,255,0,b)));
         }
         delay(wait);
         strip.show();
@@ -281,7 +261,7 @@ void fadeOut(uint32_t color, uint8_t wait) {
     uint8_t b = getBlue(color);
     for(int j = 255; j >= 0 ; j--){
       for(uint16_t i=0; i<strip.numPixels(); i++) {
-          strip.setPixelColor(i, strip.Color(map(j,0,255,0,r),map(j,0,255,0,g),map(j,0,255,0,b)));
+          strip.setPixelColor(i, Adafruit_NeoPixel::Color(map(j,0,255,0,r),map(j,0,255,0,g),map(j,0,255,0,b)));
         }
         delay(wait);
         strip.show();
