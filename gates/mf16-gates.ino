@@ -32,7 +32,19 @@ SYSTEM_MODE(AUTOMATIC);
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, PIXEL_TYPE);
 
+uint8_t activeLane;
 enum lane {lane1, lane2, lane3};
+
+uint8_t raceState;
+enum raceStates {
+  rsQuiet,      //do nothing
+  rsInit,       //start up state
+  rsDemo,       //while there is no race going
+  rsReadySetGo, //when a race is about to begin
+  rsRacing,     //while a race is active
+  rsFinish,     //when a lane finishes
+  rsComplete    //when all lanes are finished
+};
 
 enum scrollDirection {up, down, in, out};
 
@@ -90,50 +102,60 @@ uint8_t getBlue(uint32_t color){
 void setup() {
     strip.begin();
     strip.show();
-    Particle.subscribe("StartButton",readySetGo);
-    Particle.subscribe("LaneStop",lanePressed);
+    Particle.subscribe("raceState",setRaceState);
+    Particle.subscribe("laneSelect",setActiveLane);
+    raceState = rsQuiet;
 }
 
-
-
-
-
 void loop() {
+  switch (raceState) {
+    case rsQuiet:
+      allOn(black);
+      break;
 
+    case rsInit:
 
-    //allOn(red);
-    //rainbow(1000,10000);
+      break;
 
-    /*wipe(orange, 20, up);
-    wipe(black, 20, up);
+    case rsDemo:
 
-    wipe(green, 20, down);
-    wipe(black, 20, down);*/
+      break;
 
-    wipe(white, 20, in);
-    //wipe(black, 20, in);
+    case rsReadySetGo:
+      readySetGo();
+      break;
 
-    wipe(blue, 20, out);
-    //wipe(black, 20, out);
+    case rsRacing:
+      racing();
+      break;
 
-    /*fadeIn(cyan, 4);
-    fadeOut(cyan, 8);
+    case rsFinish:
+      laneFinished(activeLane);
+      break;
 
-    allOn(magenta);
-    delay(250);
-    flash(yellow, 50, 750);
-    flash(white, 100, 750);
-    flash(yellow, 10, 750);
-    wipe(black, 20, out);
-    delay(2000);*/
+    case rsComplete:
 
+      break;
+  }
+}
+
+//   __    ___   _      _      _     _      _   __     __   _____  _   ___   _
+//  / /`  / / \ | |\/| | |\/| | | | | |\ | | | / /`   / /\   | |  | | / / \ | |\ |
+//  \_\_, \_\_/ |_|  | |_|  | \_\_/ |_| \| |_| \_\_, /_/--\  |_|  |_| \_\_/ |_| \|
+
+void setRaceState(const char *event, const char *data){
+  raceState = atoi(data);
+}
+void setActiveLane(const char *event, const char *data){
+  activeLane = atoi(data);
 }
 
 //   ___    __    __    ____      __   ____  ___    _     ____  _      __    ____  __
 //  | |_)  / /\  / /`  | |_      ( (` | |_  / / \  | | | | |_  | |\ | / /`  | |_  ( (`
 //  |_| \ /_/--\ \_\_, |_|__     _)_) |_|__ \_\_\\ \_\_/ |_|__ |_| \| \_\_, |_|__ _)_)
 
-void readySetGo(const char *event, const char *data){
+void readySetGo(){
+    raceState = rsQuiet;
     fadeOut(red,3);
     fadeOut(red,3);
     fadeOut(yellow,3);
@@ -142,11 +164,32 @@ void readySetGo(const char *event, const char *data){
     delay(1000);
 }
 
-void lanePressed(const char *event, const char *data){
-    flash(yellow, 50, 500);
+void laneFinished(uint8_t whichLane){
+  uint32_t thisColor;
+  raceState = rsRacing;
+  switch (whichLane){
+    case 0:
+      thisColor = lane1Color;
+      break;
+    case 1:
+      thisColor = lane2Color;
+      break;
+    case 2:
+      thisColor = lane3Color;
+      break;
+  }
+  flash(thisColor, 50, 500);
 }
 
-void race(){
+void racing(){
+
+  wipe(white, 20, up);
+  wipe(blue, 20, down);
+  wipe(green, 20, up);
+
+  wipe(white, 20, down);
+  wipe(blue, 20, up);
+  wipe(green, 20, down);
 
 }
 
@@ -157,7 +200,6 @@ void oneMinuteRemaining(){
 //    __    _      _   _       __   _____  _   ___   _      __
 //   / /\  | |\ | | | | |\/|  / /\   | |  | | / / \ | |\ | ( (`
 //  /_/--\ |_| \| |_| |_|  | /_/--\  |_|  |_| \_\_/ |_| \| _)_)
-
 void rainbow(uint8_t wait, unsigned long duration) {
     uint16_t i, j;
     unsigned long endTime = millis() + duration;

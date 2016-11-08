@@ -35,11 +35,24 @@ Button laneBtn[LANES] = {
 
 Adafruit_7segment lcd[LANES];
 
+uint8_t raceState;
+enum raceStates {
+  rsQuiet,      //do nothing
+  rsInit,       //start up state
+  rsDemo,       //while there is no race going
+  rsReadySetGo, //when a race is about to begin
+  rsRacing,     //while a race is active
+  rsFinish,     //when a lane finishes
+  rsComplete    //when all lanes are finished
+};
+
 uint32_t counter[LANES];
 bool laneActive[LANES];
 uint32_t startTime = 0;
 
-
+//   __   ____ _____  _     ___        _        _     ___   ___   ___
+//  ( (` | |_   | |  | | | | |_)     _|_)      | |   / / \ / / \ | |_)
+//  _)_) |_|__  |_|  \_\_/ |_|       (|__7     |_|__ \_\_/ \_\_/ |_|
 void setup() {
   for (int i; i < LANES; i++){
     lcd[i] = Adafruit_7segment();
@@ -64,11 +77,16 @@ void loop() {
     delay(10);
 }
 
+
+
+
 void doStartButton() {
   if (startBtn.uniquePress()){
-      Particle.publish("StartButton","Start");
+      Particle.publish("raceState",(String)(rsReadySetGo));
       startRace();
+      delay(2000);
       while (startBtn.isPressed()){}
+      Particle.publish("raceState",(String)(rsRacing));
       startTime = millis();
   }
 }
@@ -80,7 +98,8 @@ void doLaneButtons() {
       //lcd[i].println(counter[i]);
       //lcd[i].writeDisplay();
       if (laneBtn[i].uniquePress()){
-          Particle.publish("LaneStop",(String)(i));
+          Particle.publish("raceState",(String)(rsFinish));
+          Particle.publish("laneSelect",(String)(i));
           laneActive[i] = !laneActive[i];
       }
     }
