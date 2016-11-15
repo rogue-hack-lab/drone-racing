@@ -26,7 +26,7 @@
 SYSTEM_MODE(AUTOMATIC);
 
 // IMPORTANT: Set pixel COUNT, PIN and TYPE
-#define PIXEL_PIN D7
+#define PIXEL_PIN A5
 #define PIXEL_COUNT 60
 #define PIXEL_TYPE WS2812B
 
@@ -104,7 +104,7 @@ void setup() {
     strip.show();
     Particle.subscribe("raceState",setRaceState);
     Particle.subscribe("laneSelect",setActiveLane);
-    raceState = rsQuiet;
+    raceState = rsInit;
 }
 
 void loop() {
@@ -114,7 +114,8 @@ void loop() {
       break;
 
     case rsInit:
-
+      flash(green, 50, 50);
+      delay(2000);
       break;
 
     case rsDemo:
