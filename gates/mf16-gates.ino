@@ -46,7 +46,7 @@ enum raceStates {
   rsComplete    //when all lanes are finished
 };
 
-enum scrollDirection {up, down, in, out};
+enum scrollDirection {up, down, in, out}; // 0,1,2,3
 
 int gamma[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -85,6 +85,8 @@ uint32_t magenta = Adafruit_NeoPixel::Color(255,0,255);
 uint32_t lane1Color = green;
 uint32_t lane2Color = white;
 uint32_t lane3Color = blue;
+
+uint8_t racingIteration = 0;
 
 uint8_t getRed(uint32_t color){
     return (color >> 16) & 0xff;
@@ -183,15 +185,32 @@ void laneFinished(uint8_t whichLane){
 }
 
 void racing(){
-
-  wipe(white, 20, up);
-  wipe(blue, 20, down);
-  wipe(green, 20, up);
-
-  wipe(white, 20, down);
-  wipe(blue, 20, up);
-  wipe(green, 20, down);
-
+  switch (racingIteration){
+    case 0:
+      wipe(white, 20, in);
+      break;
+    case 1:
+      wipe(blue, 20, out);
+      break;
+    case 2:
+      wipe(green, 20, in);
+      break;
+    case 3:
+      wipe(white, 20, out);
+      break;
+    case 4:
+      wipe(blue, 20, in);
+      break;
+    case 5:
+      wipe(green, 20, out);
+      break;
+  }
+  if (racingIteration <= 5) {
+    racingIteration++;
+  }
+  else {
+    racingIteration = 0;
+  }
 }
 
 void oneMinuteRemaining(){
